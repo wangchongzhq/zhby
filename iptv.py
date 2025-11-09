@@ -11,6 +11,10 @@ from collections import defaultdict
 # 频道分类（正规区域）
 # =============================================
 CHANNEL_CATEGORIES = {
+    "4K频道": ['CCTV4K', 'CCTV16 4K', '北京卫视4K', '北京IPTV4K', '湖南卫视4K', '山东卫视4K','广东卫视4K', '四川卫视4K', 
+                 '浙江卫视4K', '江苏卫视4K', '东方卫视4K', '深圳卫视4K', '河北卫视4K', '峨眉电影4K', '求索4K', '咪视界4K', '欢笑剧场4K',
+                 '苏州4K', '至臻视界4K', '南国都市4K', '翡翠台4K', '百事通电影4K', '百事通少儿4K', '百事通纪实4K', '华数爱上4K'],
+
     "央视频道": ['CCTV1', 'CCTV2', 'CCTV3', 'CCTV4', 'CCTV4欧洲', 'CCTV4美洲', 'CCTV5', 'CCTV5+', 'CCTV6', 'CCTV7', 'CCTV8', 'CCTV9',
                  'CCTV10', 'CCTV11', 'CCTV12', 'CCTV13', 'CCTV14', 'CCTV15', 'CCTV16', 'CCTV17', '兵器科技', '风云音乐', '风云足球',
                  '风云剧场', '怀旧剧场', '第一剧场', '女性时尚', '世界地理', '央视台球', '高尔夫网球', '央视文化精品', '北京纪实科教',
@@ -20,10 +24,15 @@ CHANNEL_CATEGORIES = {
                  '湖南卫视', '辽宁卫视', '黑龙江卫视', '吉林卫视', '内蒙古卫视', '宁夏卫视', '山西卫视', '陕西卫视', '甘肃卫视',
                  '青海卫视', '新疆卫视', '西藏卫视', '三沙卫视', '厦门卫视', '兵团卫视', '延边卫视', '安多卫视', '康巴卫视', '农林卫视', '山东教育',
                  'CETV1', 'CETV2', 'CETV3', 'CETV4', '早期教育'],
+
+    "北京专属频道": ['北京卫视', '北京财经', '北京纪实', '北京生活', '北京体育休闲', '北京国际', '北京文艺', '北京新闻', 
+                 '北京淘电影', '北京淘剧场', '北京淘4K', '北京淘娱乐', '北京淘BABY', '北京萌宠TV'],
+
     "山东专属频道": ['山东卫视', '山东齐鲁', '山东综艺', '山东少儿', '山东生活',
-                 '山东新闻', '山东国际', '山东体育', '山东文旅', '山东农科', '山东居家购物',
-                 '浙江卫视', '江苏卫视', '东方卫视', '深圳卫视', '北京卫视'],
+                 '山东新闻', '山东国际', '山东体育', '山东文旅', '山东农科'],
+
     "港澳频道": ['凤凰中文', '凤凰资讯', '凤凰香港', '凤凰电影'],
+
     "电影频道": ['CHC动作电影', 'CHC家庭影院', 'CHC影迷电影', '淘电影',
                  '淘精彩', '淘剧场', '星空卫视', '黑莓电影', '东北热剧',
                  '中国功夫', '动作电影', '超级电影'],
@@ -31,10 +40,9 @@ CHANNEL_CATEGORIES = {
                  '金鹰卡通', '优漫卡通', '哈哈炫动', '嘉佳卡通'],
     "iHOT频道": ['iHOT爱喜剧', 'iHOT爱科幻', 'iHOT爱院线', 'iHOT爱悬疑', 'iHOT爱历史', 'iHOT爱谍战', 'iHOT爱旅行', 'iHOT爱幼教',
                  'iHOT爱玩具', 'iHOT爱体育', 'iHOT爱赛车', 'iHOT爱浪漫', 'iHOT爱奇谈', 'iHOT爱科学', 'iHOT爱动漫'],
-    "综合频道": ['淘4K', '淘娱乐', '淘Baby', '萌宠TV', '重温经典', 'CHANNEL[V]', '求索纪录', '求索科学', '求索生活',
+    "综合频道": ['重温经典', 'CHANNEL[V]', '求索纪录', '求索科学', '求索生活',
                  '求索动物', '睛彩青少', '睛彩竞技', '睛彩篮球', '睛彩广场舞', '金鹰纪实', '快乐垂钓', '茶频道', '军事评论',
-                 '军旅剧场', '乐游', '生活时尚', '都市剧场', '欢笑剧场', '游戏风云',
-                 '金色学堂', '法治天地', '哒啵赛事'],
+                 '军旅剧场', '乐游', '生活时尚', '都市剧场', '欢笑剧场', '游戏风云', '金色学堂', '法治天地', '哒啵赛事'],
     "体育频道": ['天元围棋', '魅力足球', '五星体育', '劲爆体育', '超级体育'],
     "剧场频道": ['古装剧场', '家庭剧场', '惊悚悬疑', '明星大片', '欢乐剧场', '海外剧场', '潮妈辣婆',
                  '爱情喜剧', '超级电视剧', '超级综艺', '金牌综艺', '武搏世界', '农业致富', '炫舞未来',
@@ -45,27 +53,54 @@ CHANNEL_CATEGORIES = {
 # 频道映射（别名 -> 规范名）
 # =============================================
 CHANNEL_MAPPING = {
+    # 4K频道
+    "CCTV4K": ["CCTV 4K", "CCTV-4K"],
+    "CCTV16 4K": ["CCTV16 4K", "CCTV16-4K", "CCTV16 奥林匹克 4K", "CCTV16奥林匹克 4K"],
+    "北京卫视4K": ["北京卫视 4K", "北京卫视-4K"],
+    "北京IPTV4K": ["北京IPTV 4K", "北京IPTV-4K"],
+    "湖南卫视4K": ["湖南卫视 4K", "湖南卫视-4K"],
+    "山东卫视4K": ["山东卫视 4K", "山东卫视-4K"],
+    "广东卫视4K": ["广东卫视 4K", "广东卫视-4K"],
+    "四川卫视4K": ["四川卫视 4K", "四川卫视-4K"],
+    "浙江卫视4K": ["浙江卫视 4K", "浙江卫视-4K"],
+    "江苏卫视4K": ["江苏卫视 4K", "江苏卫视-4K"],
+    "东方卫视4K": ["东方卫视 4K", "东方卫视-4K"],
+    "深圳卫视4K": ["深圳卫视 4K", "深圳卫视-4K"],
+    "河北卫视4K": ["河北卫视 4K", "河北卫视-4K"],
+    "峨眉电影4K": ["峨眉电影 4K", "峨眉电影-4K"],
+    "求索4K": ["求索 4K", "求索-4K"],
+    "咪视界4K": ["咪视界 4K", "咪视界-4K"],
+    "欢笑剧场4K": ["欢笑剧场 4K", "欢笑剧场-4K"],
+    "苏州4K": ["苏州 4K", "苏州-4K"],
+    "至臻视界4K": ["至臻视界 4K", "至臻视界-4K"],
+    "南国都市4K": ["南国都市 4K", "南国都市-4K"],
+    "翡翠台4K": ["翡翠台 4K", "翡翠台-4K"],
+    "百事通电影4K": ["百事通电影 4K", "百事通电影-4K"],
+    "百事通少儿4K": ["百事通少儿 4K", "百事通少儿-4K"],
+    "百事通纪实4K": ["百事通纪实 4K", "百事通纪实-4K"],
+    "华数爱上4K": ["华数爱上 4K", "爱上 4K", "爱上4K",  "爱上-4K", "华数爱上-4K"],
+    
     # 央视频道
-    "CCTV1": ["CCTV-1", "CCTV-1 HD", "CCTV-1 综合"],
-    "CCTV2": ["CCTV-2", "CCTV-2 HD", "CCTV-2 财经"],
-    "CCTV3": ["CCTV-3", "CCTV-3 HD", "CCTV-3 综艺"],
-    "CCTV4": ["CCTV-4", "CCTV-4 HD", "CCTV4a", "CCTV4A", "CCTV-4 中文国际"],
+    "CCTV1": ["CCTV-1", "CCTV-1 HD", "CCTV1综合", "CCTV-1 综合"],
+    "CCTV2": ["CCTV-2", "CCTV-2 HD", "CCTV2 财经", "CCTV-2 财经"],
+    "CCTV3": ["CCTV-3", "CCTV-3 HD", "CCTV3 综艺", "CCTV-3 综艺"],
+    "CCTV4": ["CCTV-4", "CCTV-4 HD", "CCTV4a", "CCTV4A", "CCTV4 中文国际", "CCTV-4 中文国际"],
     "CCTV4欧洲": ["CCTV-4欧洲", "CCTV-4欧洲 HD", "CCTV-4 欧洲", "CCTV4o", "CCTV4O", "CCTV-4 中文欧洲", "CCTV4中文欧洲"],
     "CCTV4美洲": ["CCTV-4美洲", "CCTV-4美洲 HD", "CCTV-4 美洲", "CCTV4m", "CCTV4M", "CCTV-4 中文美洲", "CCTV4中文美洲"],
-    "CCTV5": ["CCTV-5", "CCTV-5 HD", "CCTV-5 体育"],
-    "CCTV5+": ["CCTV-5+", "CCTV-5+ HD", "CCTV-5+ 体育赛事"],
-    "CCTV6": ["CCTV-6", "CCTV-6 HD", "CCTV-6 电影"],
-    "CCTV7": ["CCTV-7", "CCTV-7 HD", "CCTV-7 国防军事"],
-    "CCTV8": ["CCTV-8", "CCTV-8 HD", "CCTV-8 电视剧"],
-    "CCTV9": ["CCTV-9", "CCTV-9 HD", "CCTV-9 纪录"],
-    "CCTV10": ["CCTV-10", "CCTV-10 HD", "CCTV-10 科教"],
-    "CCTV11": ["CCTV-11", "CCTV-11 HD", "CCTV-11 戏曲"],
-    "CCTV12": ["CCTV-12", "CCTV-12 HD", "CCTV-12 社会与法"],
-    "CCTV13": ["CCTV-13", "CCTV-13 HD", "CCTV-13 新闻"],
-    "CCTV14": ["CCTV-14", "CCTV-14 HD", "CCTV-14 少儿"],
-    "CCTV15": ["CCTV-15", "CCTV-15 HD", "CCTV-15 音乐"],
-    "CCTV16": ["CCTV-16", "CCTV-16 HD", "CCTV-16 奥林匹克", "CCTV16 4K", "CCTV16奥林匹克 4K"],
-    "CCTV17": ["CCTV-17", "CCTV-17 HD", "CCTV-17 农业农村"],
+    "CCTV5": ["CCTV-5", "CCTV-5 HD", "CCTV5 体育", "CCTV-5 体育"],
+    "CCTV5+": ["CCTV-5+", "CCTV-5+ HD", "CCTV5+ 体育赛事", "CCTV-5+ 体育赛事"],
+    "CCTV6": ["CCTV-6", "CCTV-6 HD", "CCTV6 电影", "CCTV-6 电影"],
+    "CCTV7": ["CCTV-7", "CCTV-7 HD", "CCTV7 国防军事", "CCTV-7 国防军事"],
+    "CCTV8": ["CCTV-8", "CCTV-8 HD", "CCTV8 电视剧", "CCTV-8 电视剧"],
+    "CCTV9": ["CCTV-9", "CCTV-9 HD", "CCTV9 纪录", "CCTV-9 纪录"],
+    "CCTV10": ["CCTV-10", "CCTV-10 HD", "CCTV10 科教", "CCTV-10 科教"],
+    "CCTV11": ["CCTV-11", "CCTV-11 HD", "CCTV11 戏曲", "CCTV-11 戏曲"],
+    "CCTV12": ["CCTV-12", "CCTV-12 HD", "CCTV12 社会与法", "CCTV-12 社会与法"],
+    "CCTV13": ["CCTV-13", "CCTV-13 HD", "CCTV13 新闻", "CCTV-13 新闻"],
+    "CCTV14": ["CCTV-14", "CCTV-14 HD", "CCTV14 少儿", "CCTV-14 少儿"],
+    "CCTV15": ["CCTV-15", "CCTV-15 HD", "CCTV15 音乐", "CCTV-15 音乐"],
+    "CCTV16": ["CCTV-16", "CCTV-16 HD", "CCTV-16 奥林匹克", "CCTV16 奥林匹克"],
+    "CCTV17": ["CCTV-17", "CCTV-17 HD", "CCTV17 农业农村", "CCTV-17 农业农村"],
     "兵器科技": ["CCTV-兵器科技", "CCTV兵器科技"],
     "风云音乐": ["CCTV-风云音乐", "CCTV风云音乐"],
     "风云足球": ["CCTV-风云足球", "CCTV风云足球"],
@@ -104,9 +139,9 @@ CHANNEL_MAPPING = {
     "安徽卫视": ["安徽卫视 HD"],
     "湖南卫视": ["湖南卫视 HD"],
     "辽宁卫视": ["辽宁卫视 HD"],
-    "黑龙江卫视": ["黑龙江卫视 HD"],
+    "黑龙江卫视": ["黑龙江卫视 HD", "龙江卫视", "龙江卫视 HD"],
     "吉林卫视": ["吉林卫视 HD"],
-    "内蒙古卫视": ["内蒙古卫视 HD"],
+    "内蒙古卫视": ["内蒙古卫视 HD", "内蒙卫视", "内蒙卫视 HD"],
     "宁夏卫视": ["宁夏卫视 HD"],
     "山西卫视": ["山西卫视 HD"],
     "陕西卫视": ["陕西卫视 HD"],
@@ -128,6 +163,27 @@ CHANNEL_MAPPING = {
     "CETV4": ["中国教育4台", "中国教育四台", "中国教育4", "CETV-4 职业教育", "CETV-4"],
     "早期教育": ["中国教育5台", "中国教育5", "中国教育五台", "CETV早期教育", "CETV-早期教育", "CETV 早期教育", "CETV-5", "CETV5"],
     
+
+    # 北京专属频道
+    "北京卫视": ["北京卫视 HD"],
+    "北京财经": ["北京财经 HD"],
+    "北京纪实": ["北京纪实 HD"],
+    "北京生活": ["北京生活 HD"],
+    "北京体育休闲": ["北京体育休闲 HD"],
+    "北京国际": ["北京国际 HD"],
+    "北京文艺": ["北京文艺 HD"],
+    "北京新闻": ["北京新闻 HD"],
+    "北京国际": ["北京国际 HD"],
+    "北京淘电影": ["IPTV淘电影", "北京IPTV淘电影", "淘电影"],
+    "北京淘娱乐": ["IPTV淘娱乐", "北京IPTV淘娱乐", "淘娱乐"],
+    "北京淘剧场": ["IPTV淘剧场", "北京IPTV淘剧场", "淘剧场"],
+    "北京淘4K": ["IPTV淘4K", "北京IPTV淘4K", "淘4K", "北京IPTV4K超清", "淘 4K"],
+    "北京淘娱乐": ["IPTV淘娱乐", "北京IPTV淘娱乐", "淘娱乐"],
+    "北京淘BABY": ["IPTV淘BABY", "北京IPTV淘BABY", "北京淘Baby", "IPTV淘baby", "IPTV淘Baby", "北京IPTV淘baby", "北京淘baby"],
+    "北京萌宠TV": ["IPTV淘萌宠", "北京IPTV淘萌宠", "北京淘萌宠"],
+
+
+
     # 山东专属频道
     "山东齐鲁": ["山东齐鲁频道", "齐鲁频道"],
     "山东综艺": ["山东综艺频道", "综艺频道"],
@@ -138,7 +194,7 @@ CHANNEL_MAPPING = {
     "山东体育": ["山东体育频道", "体育频道"],
     "山东文旅": ["山东文旅频道", "文旅频道"],
     "山东农科": ["山东农科频道", "农科频道"],
-    "山东居家购物": ["山东居家购物频道", "居家购物"],
+
     
     # 港澳频道
     "凤凰中文": ["凤凰卫视中文台", "凤凰中文台", "凤凰卫视中文"],
@@ -188,10 +244,6 @@ CHANNEL_MAPPING = {
     "iHOT爱动漫": ["iHOT 爱动漫", "IHOT 爱动漫", "IHOT爱动漫", "ihot爱动漫", "ihot 爱动漫", "爱动漫"],
     
     # 综合频道
-    "淘4K": ["IPTV淘4K", "北京IPTV淘4K", "北京淘4K", "北京IPTV4K超清", "淘 4K", "华数爱上4K", "华数4K", "爱上4K"],
-    "淘娱乐": ["IPTV淘娱乐", "北京IPTV淘娱乐", "北京淘娱乐"],
-    "淘Baby": ["IPTV淘BABY", "北京IPTV淘BABY", "北京淘BABY", "IPTV淘baby", "北京IPTV淘baby", "北京淘baby"],
-    "萌宠TV": ["IPTV淘萌宠", "北京IPTV淘萌宠", "北京淘萌宠"],
     "重温经典": ["重温经典 HD"],
     "CHANNEL[V]": ["CHANNEL V", "Channel V"],
     "求索纪录": ["求索记录", "求索纪录4K", "求索记录4K", "求索纪录 4K", "求索记录 4K"],
@@ -577,11 +629,14 @@ def generate_statistics_log(all_channels, source_stats, user_sources, m3u_filena
 def main():
     # 在这里添加您的稳定IPTV源URL
     default_sources = [
-        "https://ghfast.top/https://raw.githubusercontent.com/moonkeyhoo/iptv-api/master/output/result.m3u",
-        "https://raw.githubusercontent.com/kakaxi-1/IPTV/main/ipv6.m3u",
-        "https://raw.githubusercontent.com/kakaxi-1/IPTV/main/ipv4.txt",
+        "https://ghcy.eu.org/https://raw.githubusercontent.com/moonkeyhoo/iptv-api/master/output/result.m3u",
+        "https://ghcy.eu.org/https://raw.githubusercontent.com/kakaxi-1/IPTV/main/ipv6.m3u",
+        "https://ghcy.eu.org/https://raw.githubusercontent.com/kakaxi-1/IPTV/main/ipv4.txt",
         "http://106.53.99.30/2025.txt",
-        "https://raw.githubusercontent.com/Heiwk/iptv67/refs/heads/main/iptv.m3u",
+        "https://ghcy.eu.org/https://raw.githubusercontent.com/Supprise0901/TVBox_live/refs/heads/main/live.txt",
+        "https://ghfast.top/raw.githubusercontent.com/ffmking/tv1/main/888.txt",
+        "https://ghfast.top/https://raw.githubusercontent.com/qingtingjjjjjjj/Web-Scraping/main/live.txt",
+        "https://ghcy.eu.org/https://raw.githubusercontent.com/Heiwk/iptv67/refs/heads/main/iptv.m3u",
     ]
     
     user_sources = [
