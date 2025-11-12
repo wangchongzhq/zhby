@@ -1,0 +1,50 @@
+name: Generate IPTV TXT Auto
+
+on:
+  schedule:
+    # 北京时间早晨2点运行 (UTC时间18点，因为GitHub Actions使用UTC时间)
+    - cron: '0 18 * * *'
+  workflow_dispatch:  # 允许手动触发
+  push:
+    branches: [ main ]
+
+jobs:
+  generate-iptv:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+        
+    - name: Run IPTV generator
+      run: |
+        python ipzyauto.py
+        
+    - name: Display file stats
+      run: |
+        echo "生成的文件统计:"
+        if [ -f "ipzyauto.txt" ]; then
+          echo "📺 频道文件: $(wc -l < ipzyauto.txt) 行"
+          echo "📊 实际频道数: $(grep -c "^[^#]" ipzyauto.txt || echo "0")"
+        fi
+        if [ -f "ipzyauto统计数据.log" ]; then
+          echo "📋 日志文件: $(ls -lh ipzyauto统计数据.log | awk '{print $5}')"
+        fi
+        
+    - name: Commit and push if changed
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add ipzyauto.txt ipzyauto统计数据.log
+        git diff --staged --quiet || git commit -m "Auto-update IPTV files - $(date +'%Y-%m-%d %H:%M:%S')"
+        git push
